@@ -13,7 +13,7 @@ I'll try my best to update this documentation.
   <tr><td colspan=2><strong>Date Picker</strong></td></tr>
   <tr>
     <td><p align="center"><img src="./docs/ios_date.png" width="260" height="420"/></p></td>
-    <td><p align="center"><img src="./docs/android_date.png" width="200" height="400"/></p></td>
+    <td><p align="center"><img src="./docs/android_date.png" width="260" height="420"/></p></td>
   </tr>
 </table>
 
