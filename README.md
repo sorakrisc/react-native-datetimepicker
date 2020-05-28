@@ -36,6 +36,7 @@ yarn add @sorakrisc/react-native-datetimepicker
 ### Date Picker
 
 ```jsx
+import {TimePicker, DatePicker, toBuddhistYear} from "react-native-24h-timepicker";
 <DatePicker
           ref={ref => {
               this.DatePicker = ref;
