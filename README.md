@@ -1,25 +1,81 @@
-# react-native-24h-timepicker
+# React Native Datetime Picker
 
-[![npm version](https://badge.fury.io/js/react-native-24h-timepicker.svg)](//npmjs.com/package/react-native-24h-timepicker) [![npm downloads](https://img.shields.io/npm/dm/react-native-24h-timepicker.svg)
-](//npmjs.com/package/react-native-24h-timepicker)
+![Supports Android and iOS][support-badge]
+
+This is a library forked from https://github.com/nysamnang/react-native-24h-timepicker/issues
+the intention was to support buddhist year and modified min max date time.
+
+I'll try my best to update this documentation.
 
 ### Screenshot
+
+<table>
+  <tr><td colspan=2><strong>Date Picker</strong></td></tr>
+  <tr>
+    <td><p align="center"><img src="./docs/ios_date.png" width="260" height="420"/></p></td>
+    <td><p align="center"><img src="./docs/android_date.png" width="200" height="400"/></p></td>
+  </tr>
+</table>
 
 ![screenshot](https://raw.githubusercontent.com/NYSamnang/stock-images/master/react-native-24h-timepicker/RN24TPK-IOS.gif)
 
 ## Installation
 
 ```
-npm i react-native-24h-timepicker --save
+npm i @sorakrisc/react-native-datetimepicker --save
 ```
 
 ### or
 
 ```
-yarn add react-native-24h-timepicker
+yarn add @sorakrisc/react-native-datetimepicker
 ```
 
-## Example
+## Usage
+
+### Date Picker
+
+```jsx
+<DatePicker
+          ref={ref => {
+              this.DatePicker = ref;
+          }}
+          placeholder={'placeholder'}
+          date={date}
+          format={'DD/MM/YYYY'}
+          inputComponent={<InputText
+              pointerEvents="none"
+              type={this.props.inputType}
+              mt={26}
+              label={Localized['question.answer']}
+              maskOptions={this.props.inputMaskOptions}
+              // value={toBuddhistYear(moment(this.state.date, 'DD/MM/YYYY'), 'DD MMM YYYY')}
+              value={moment(this.state.date, 'DD/MM/YYYY')}
+          />}
+          minDate={moment().subtract(100, 'years')}
+          maxDate={moment().add(100, 'years')}
+          confirmBtnText={'confirm'}
+          cancelBtnText={'cancel'}
+          onConfirm={(date) => this.setDate(date)}
+          // calendarType={'buddhist'}
+          // monthList={[
+          //     'มกราคม',
+          //     'กุมภาพันธ์',
+          //     'มีนาคม',
+          //     'เมษายน',
+          //     'พฤษภาคม',
+          //     'มิถุนายน',
+          //     'กรกฎาคม',
+          //     'สิงหาคม',
+          //     'กันยายน',
+          //     'ตุลาคม',
+          //     'พศจิกายน',
+          //     'ธันวาคม'
+          // ]}
+      />
+```
+
+### Time Picker
 
 ```jsx
 import React, { Component } from "react";
@@ -95,7 +151,7 @@ const styles = StyleSheet.create({
 export default Example;
 ```
 
-## Props
+##### Props
 
 | Prop           | Type     | Description                                    | Default |
 | -------------- | -------- | ---------------------------------------------- | ------- |
@@ -113,14 +169,14 @@ export default Example;
 | onCancel       | function | Event on Cancel button                         |         |
 | onConfirm      | function | Event on Confirm button                        |         |
 
-## Methods
+##### Methods
 
 | Method Name | Description      |
 | ----------- | ---------------- |
 | open        | Open TimePicker  |
 | close       | Close TimePicker |
 
-### Note
+##### Note
 
 Always set `ref` to `TimePicker` and call each method by using `this.TimePicker.methodName()` like example above.
 
@@ -129,5 +185,8 @@ Always set `ref` to `TimePicker` and call each method by using `this.TimePicker.
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/NYSamnang/react-native-24h-timepicker/blob/master/LICENSE) file for details
 
 ## Author
+[Sorakris Chaladlamsakul](https://github.com/sorakrisc).
+Originally from [NY Samnang](https://github.com/NYSamnang).
 
-Made with ❤️ by [NY Samnang](https://github.com/NYSamnang).
+
+[support-badge]: https://img.shields.io/badge/platforms-android%20|%20ios-lightgrey.svg?style=flat-square

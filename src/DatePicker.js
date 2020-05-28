@@ -5,7 +5,7 @@ import styles from './styles';
 import Moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-const monthList = [
+const _monthList = [
   'January',
   'Febuary',
   'March',
@@ -173,7 +173,7 @@ class DatePicker extends Component {
   };
   getMonthItems = () => {
     const items = [];
-    const {minMonth, maxMonth, monthInterval, monthUnit} = this.props;
+    const {minMonth, maxMonth, monthInterval, monthUnit, monthList} = this.props;
     const interval = maxMonth / monthInterval;
 
     for (let i = minMonth; i <= interval; i++) {
@@ -249,10 +249,6 @@ class DatePicker extends Component {
       }
       this.close();
     });
-    // if (typeof this.props.onConfirm === 'function') {
-    //     this.props.onConfirm(date);
-    // }
-    // this.close();
   };
 
   close = () => {
@@ -429,7 +425,7 @@ DatePicker.defaultProps = {
   maxDay: 31,
   maxMonth: 12,
   maxYear: 9999,
-  monthList: monthList,
+  monthList: _monthList,
   monthInterval: 1,
   yearInterval: 1,
   dayInterval: 1,
