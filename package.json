@@ -1,0 +1,28 @@
+{
+  "name": "@sorakrisc/react-native-datetimepicker",
+  "version": "1.0.0",
+  "description": "React Native date and time picker for both ios and android.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sorakrisc/react-native-datetimepicker.git"
+  },
+  "keywords": [
+    "date",
+    "time",
+    "datetime",
+    "picker",
+    "datetimepicker",
+    "buddhist",
+    "year"
+  ],
+  "author": "Sorakris Chaladlamsakul",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sorakrisc/react-native-datetimepicker/issues"
+  },
+  "homepage": "https://github.com/sorakrisc/react-native-datetimepicker#readme"
+}
