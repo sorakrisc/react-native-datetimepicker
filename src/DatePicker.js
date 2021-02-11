@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Picker, Platform, Text, TouchableHighlight, View } from 'react-native';
+import { Text, TouchableHighlight, View } from 'react-native';
 import styles from './styles';
 import Moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
-
+import { Picker } from '@react-native-picker/picker';
 const _monthList = [
     'January',
     'Febuary',
@@ -32,7 +32,8 @@ class DatePicker extends Component {
             selectedDay: parsedDate.date().toString(),
             selectedMonth: (parsedDate.month() + 1).toString(),
             selectedYear: parsedDate.year().toString(),
-            date
+            date,
+            pickerDayKey: 0
         };
     }
 
@@ -192,7 +193,7 @@ class DatePicker extends Component {
         const { minDay, maxDay, dayInterval, dayUnit } = this.props;
         const interval = maxDay / dayInterval;
         for (let i = minDay; i <= interval; i++) {
-            if (this.selectedMonthHaveDay(i) || Platform.OS === 'ios') {
+            if (this.selectedMonthHaveDay(i)) {
                 const value = `${i * dayInterval}`;
                 const item = (
                     <Picker.Item key={value} value={value}
@@ -227,7 +228,7 @@ class DatePicker extends Component {
                 this.setState({ selectedDay, selectedMonth, selectedYear });
             } else {
                 const correctSelectedDay = Moment(`01/${selectedMonth}/${selectedYear}`, 'DDMYYYY').endOf('month').format('DD');
-                this.setState({ selectedDay: correctSelectedDay, selectedMonth, selectedYear });
+                this.setState({ selectedDay: correctSelectedDay, selectedMonth, selectedYear, pickerDayKey: this.state.pickerDayKey + 1 })
             }
 
         }
@@ -298,11 +299,12 @@ class DatePicker extends Component {
     };
 
     renderBody = () => {
-        const { selectedDay, selectedMonth, selectedYear } = this.state;
+        const { selectedDay, selectedMonth, selectedYear, pickerDayKey } = this.state;
 
         return (
             <View style={styles.body}>
                 <Picker
+                    key={pickerDayKey}
                     selectedValue={selectedDay}
                     style={styles.picker}
                     itemStyle={this.props.itemStyle}
