@@ -23,12 +23,14 @@ I'll try my best to update this documentation.
 
 ```
 npm i @sorakrisc/react-native-datetimepicker --save
+npm i @react-native-picker/picker
 ```
 
 ### or
 
 ```
 yarn add @sorakrisc/react-native-datetimepicker
+yarn add @react-native-picker/picker
 ```
 
 ## Usage
