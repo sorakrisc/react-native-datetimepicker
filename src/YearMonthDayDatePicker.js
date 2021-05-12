@@ -205,14 +205,14 @@ class YearMonthDayDatePicker extends Component {
                         {cancelBtnText}
                     </Text>
                 </TouchableComponent>
-                {textTitle &&
+                {textTitle ?
                 <View style={styles.buttonAction}>
                     <Text style={[
                         styles.buttonText,
                         { color: 'black', fontWeight: '500' },
                         textTitleStyle
-                    ]}>{textTitle}</Text>
-                </View>}
+                    ]}>{textTitle({type:this.state.type})}</Text>
+                </View>: null}
                 <TouchableComponent underlayColor={'transparent'}
                                     onPress={this.onConfirm}
                                     style={styles.buttonAction}>
@@ -342,7 +342,7 @@ YearMonthDayDatePicker.propTypes = {
     inputComponent: PropTypes.func, //input component function that render customize input
     inputStyle: PropTypes.any,
 
-    textTitle: PropTypes.string,
+    textTitle: PropTypes.func,
     textTitleStyle: PropTypes.any,
 
     pickerProps: PropTypes.any,
