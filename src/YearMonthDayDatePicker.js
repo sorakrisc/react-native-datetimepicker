@@ -195,7 +195,7 @@ class YearMonthDayDatePicker extends Component {
     };
 
     renderHeader = () => {
-        const { confirmBtnText, cancelBtnText, textTitle, TouchableComponent } = this.props;
+        const { confirmBtnText, cancelBtnText, textTitle, TouchableComponent, textTitleStyle } = this.props;
         return (
             <View style={styles.header}>
                 <TouchableComponent underlayColor={'transparent'}
@@ -231,7 +231,7 @@ class YearMonthDayDatePicker extends Component {
             <View style={styles.body}>
                 <Picker
                     selectedValue={selectedValue}
-                    style={[styles.picker, pickerProps.styles]}
+                    style={[styles.picker, pickerProps?.styles]}
                     onValueChange={itemValue => {
                         this.setState({ [selectedValueKey]: itemValue }, () => {
                             onPickerValueChange({ type, itemValue });
