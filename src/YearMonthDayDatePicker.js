@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Text, TouchableHighlight, View } from 'react-native';
+import {Text, TouchableHighlight, View} from 'react-native';
 import styles from './styles';
 import Moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { Picker } from '@react-native-picker/picker';
+import {Picker} from '@react-native-picker/picker';
 
 const _monthList = [
     'January',
@@ -209,7 +209,7 @@ class YearMonthDayDatePicker extends Component {
                 <View style={styles.buttonAction}>
                     <Text style={[
                         styles.buttonText,
-                        { color: 'black', fontWeight: '500' },
+                        { color: 'black' },
                         textTitleStyle
                     ]}>{textTitle({type:this.state.type})}</Text>
                 </View>: null}
