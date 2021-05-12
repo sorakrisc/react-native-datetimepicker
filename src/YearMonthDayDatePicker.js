@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Text, TouchableHighlight, View} from 'react-native';
+import { Text, TouchableHighlight, View } from 'react-native';
 import styles from './styles';
 import Moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
 const _monthList = [
     'January',
@@ -39,42 +39,77 @@ class YearMonthDayDatePicker extends Component {
         };
     }
 
+    upperCaseFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
     getMinDate = (unitName) => {
-        const { minDate } = this.props;
+        const { minDate, year, month } = this.props;
+        let minResult = this.props['min' + this.upperCaseFirstLetter(unitName)];
+
+        // // if day check for leap year
+        // if(unitName === 'day') {
+        //     minResult = Math.max(minDay, Moment(`${year}-${month}`, `${inputYearFormat}-${inputMonthFormat}`).daysInMonth() );
+        // }
+
         if (minDate) {
             const dateMinDate = Moment(minDate, 'DMYYYY');
             switch (unitName) {
                 case 'day':
-                    return dateMinDate.day();
+                    // check if year and month selected greater or equal to maxDate year and month
+                    if(year <= dateMinDate.year() && month <= dateMinDate.month() + 1 ) {
+                        minResult = Math.max(minResult, dateMinDate.date());
+                    }
+                    break;
                 case 'month':
-                    return dateMinDate.month() + 1;
+                    // check if year selected greater or equal to maxDate year
+                    if(year <= dateMinDate.year() ) {
+                        minResult = Math.max(minResult, dateMinDate.month() + 1);
+                    }
+                    break;
                 case 'year':
-                    return dateMinDate.year();
+                    minResult = Math.max(minResult, dateMinDate.year());
+                    break;
                 default:
-                    return null;
+                    break;
             }
-        } else {
-            return this.props['min' + unitName.charAt(0).toUpperCase() + unitName.slice(1)];
         }
 
+        return minResult;
     };
 
     getMaxDate = (unitName) => {
-        const { maxDate } = this.props;
+        const { maxDate, year, month, inputYearFormat, inputMonthFormat } = this.props;
+
+        //get Max from props maxDay maxMonth maxYear by unitName
+        let maxResult = this.props['max' + this.upperCaseFirstLetter(unitName)];
+
+        // if day check for leap year
+        if(unitName === 'day') {
+            maxResult = Math.min(maxResult, Moment(`${year}-${month}`, `${inputYearFormat}-${inputMonthFormat}`).daysInMonth() );
+        }
+        // if maxDate is sepecify maxResult must not exceed the maxDate
         if (maxDate) {
             const dateMaxDate = Moment(maxDate, 'DDMYYYY');
             switch (unitName) {
                 case 'day':
-                    return dateMaxDate.day();
+                    // check if year and month selected greater or equal to maxDate year and month
+                    if(year >= dateMaxDate.year() && month >= dateMaxDate.month() + 1 ) {
+                        maxResult = Math.min(maxResult, dateMaxDate.date());
+                    }
+                    break;
                 case 'month':
-                    return dateMaxDate.month() + 1;
+                    // check if year selected match with maxDate year
+                    if(year >= dateMaxDate.year()) {
+                        maxResult = Math.min(maxResult, dateMaxDate.month() + 1);
+                    }
+                    break;
                 case 'year':
-                    return dateMaxDate.year();
+                    maxResult = Math.min(maxResult, dateMaxDate.year());
+                    break;
+                default:
+                    break;
             }
-            return null;
-        } else {
-            return this.props['max' + unitName.charAt(0).toUpperCase() + unitName.slice(1)];
         }
+        return maxResult;
     };
 
 
@@ -97,11 +132,13 @@ class YearMonthDayDatePicker extends Component {
         return items;
     };
     getMonthItems = () => {
-        const { minMonth, maxMonth, monthInterval, monthUnit, monthList, initialMonthPicker } = this.props;
+        const { monthInterval, monthUnit, monthList, initialMonthPicker } = this.props;
         const items = [...initialMonthPicker];
-        const interval = maxMonth / monthInterval;
+        const actualMaxMonth = this.getMaxDate('month');
+        const actualMinMonth = this.getMinDate('month');
+        const interval = actualMaxMonth / monthInterval;
 
-        for (let i = minMonth; i <= interval; i++) {
+        for (let i = actualMinMonth; i <= interval; i++) {
             const monthIndex = (i - 1) * monthInterval;
             const value = monthList[monthIndex];
             const item = (
@@ -113,13 +150,14 @@ class YearMonthDayDatePicker extends Component {
         return items;
     };
     getDayItems = () => {
-        const { minDay, maxDay, dayInterval, dayUnit, year, month, inputYearFormat, inputMonthFormat, initialDayPicker, dayStartWithZero } = this.props;
+        const { dayInterval, dayUnit, initialDayPicker, dayStartWithZero } = this.props;
         const items = [...initialDayPicker];
-        // interval = max day (specified from props and not more than day in a month) / day interval (2, [2,4,8..])
-        const actualMaxDay = Math.min(maxDay, Moment(`${year}-${month}`, `${inputYearFormat}-${inputMonthFormat}`).daysInMonth());
+        // interval = getmaxdateday / day interval (2, [2,4,8..])
+        const actualMaxDay = this.getMaxDate('day');
+        const actualMinDay = this.getMinDate('day');
         const interval = actualMaxDay / dayInterval;
 
-        for (let i = minDay; i <= interval; i++) {
+        for (let i = actualMinDay; i <= interval; i++) {
             const value = `${i * dayInterval}`;
             let displayValue = value;
             if(dayStartWithZero && value.length<2){
@@ -185,9 +223,25 @@ class YearMonthDayDatePicker extends Component {
 
     open = (type) => {
 
+        let pickerValueType = this.props[type];
+        if(!pickerValueType){
+            const minValue = this.getMinDate(type);
+            if(type === 'year'){
+                pickerValueType = this.defaultPickerValue[type];
+            }
+            else if( this.getMinDate(type) > this.getMaxDate(type) ) {
+                const ini = this.props[`initial${this.upperCaseFirstLetter(type)}Picker`];
+                if (ini.length > 0) {
+                    pickerValueType = ini[0].props.value;
+                }
+            } else {
+                pickerValueType = minValue.toString();
+            }
+        }
+
         this.setState({
             type,
-            [`pickerValue-${type}`]:this.props[type]?this.props[type]: this.defaultPickerValue[type]
+            [`pickerValue-${type}`]:pickerValueType
         }, () => {
             this.RBSheet.open();
         });
@@ -211,7 +265,7 @@ class YearMonthDayDatePicker extends Component {
                         styles.buttonText,
                         { color: 'black' },
                         textTitleStyle
-                    ]}>{textTitle({type:this.state.type})}</Text>
+                    ]}>{textTitle({ type:this.state.type })}</Text>
                 </View>: null}
                 <TouchableComponent underlayColor={'transparent'}
                                     onPress={this.onConfirm}
@@ -231,7 +285,7 @@ class YearMonthDayDatePicker extends Component {
             <View style={styles.body}>
                 <Picker
                     selectedValue={selectedValue}
-                    style={[styles.picker, pickerProps?.styles]}
+                    style={[styles.picker, pickerProps.styles]}
                     onValueChange={itemValue => {
                         this.setState({ [selectedValueKey]: itemValue }, () => {
                             onPickerValueChange({ type, itemValue });
@@ -420,4 +474,3 @@ YearMonthDayDatePicker.defaultProps = {
 };
 
 export default YearMonthDayDatePicker;
-
