@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Text, TouchableHighlight, View } from 'react-native';
+import { Keyboard, Text, TouchableHighlight, View } from 'react-native';
 import styles from './styles';
 import Moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Picker } from '@react-native-picker/picker';
+import { isValid } from '@sorakrisc/react-native-datetimepicker/src/helpers/dateHelpers';
 
 const _monthList = [
     'January',
@@ -199,6 +200,10 @@ class YearMonthDayDatePicker extends Component {
                 ret.day = changedValue;
                 break;
         }
+        // if month or year is changed might cause invalid day to occur e.g. 2021/02/29
+        if(!isValid(ret)) {
+            ret.day = ''
+        }
         return ret;
     };
 
@@ -222,7 +227,8 @@ class YearMonthDayDatePicker extends Component {
     };
 
     open = (type) => {
-
+        // dismiss keyboard if rbsheet is open (when close it will not reopen keyboard)
+        Keyboard.dismiss();
         let pickerValueType = this.props[type];
         if(!pickerValueType){
             const minValue = this.getMinDate(type);

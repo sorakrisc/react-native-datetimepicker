@@ -5,6 +5,8 @@ import styles from './styles';
 import Moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Picker } from '@react-native-picker/picker';
+import { isValid } from './helpers/dateHelpers';
+
 const _monthList = [
     'January',
     'Febuary',
@@ -90,27 +92,11 @@ class DatePicker extends Component {
         } else {
             //handle case for day 28,29,30,31
             const { selectedMonth, selectedYear } = this.state;
-            return this.isValid(day, parseInt(selectedMonth), parseInt(selectedYear));
+            return isValid({day, month: selectedMonth, year: selectedYear});
         }
 
     };
-    daysInMonth = (m, y) => { // m is 1 indexed: 1-12
-        switch (m) {
-            case 2 :
-                return (y % 4 == 0 && y % 100) || y % 400 == 0 ? 29 : 28;
-            case 4 :
-            case 6 :
-            case 9 :
-            case 11 :
-                return 30;
-            default :
-                return 31;
-        }
-    };
 
-    isValid = (d, m, y) => {
-        return m >= 1 && m < 13 && d > 0 && d <= this.daysInMonth(m, y);
-    };
     getMinDate = (unitName) => {
         const { minDate } = this.props;
         if (minDate) {
@@ -224,7 +210,7 @@ class DatePicker extends Component {
                 selectedYear: maxDate.year().toString()
             });
         } else {
-            if (this.isValid(parseInt(selectedDay), parseInt(selectedMonth), parseInt(selectedYear))) {
+            if (isValid({ day: selectedDay, month: selectedMonth, year: selectedYear})) {
                 this.setState({ selectedDay, selectedMonth, selectedYear });
             } else {
                 const correctSelectedDay = Moment(`01/${selectedMonth}/${selectedYear}`, 'DDMYYYY').endOf('month').format('DD');
