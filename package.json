@@ -1,6 +1,6 @@
 {
   "name": "@sorakrisc/react-native-datetimepicker",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "React Native date and time picker that support buddhist year for both ios and android.",
   "main": "index.js",
   "scripts": {
