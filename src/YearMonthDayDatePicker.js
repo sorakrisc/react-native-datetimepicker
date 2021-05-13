@@ -185,7 +185,7 @@ class YearMonthDayDatePicker extends Component {
     };
 
     getConfirmDate = () => {
-        const { year, month, day } = this.props;
+        const { year, month, day, initialDayPicker } = this.props;
         const { type } = this.state;
         const changedValue = this.state[`pickerValue-${type}`];
         const ret = { year, month, day };
@@ -201,8 +201,12 @@ class YearMonthDayDatePicker extends Component {
                 break;
         }
         // if month or year is changed might cause invalid day to occur e.g. 2021/02/29
+        // must not change if day is a customize value developer must handle externally
         if(!isValid(ret)) {
-            ret.day = ''
+            const initialDayValues = initialDayPicker.map(initialDayValue=> initialDayValue?.props?.value)
+            if(!initialDayValues.includes(ret.day)) {
+                ret.day = ''
+            }
         }
         return ret;
     };
