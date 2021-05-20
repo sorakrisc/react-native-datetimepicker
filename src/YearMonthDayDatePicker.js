@@ -5,7 +5,7 @@ import styles from './styles';
 import Moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Picker } from '@react-native-picker/picker';
-import { isValid } from '@sorakrisc/react-native-datetimepicker/src/helpers/dateHelpers';
+import { isExceedMaxMinDate, isValid } from './helpers/dateHelpers';
 
 const _monthList = [
     'January',
@@ -185,7 +185,7 @@ class YearMonthDayDatePicker extends Component {
     };
 
     getConfirmDate = () => {
-        const { year, month, day, initialDayPicker } = this.props;
+        const { year, month, day, initialDayPicker, maxDate, minDate } = this.props;
         const { type } = this.state;
         const changedValue = this.state[`pickerValue-${type}`];
         const ret = { year, month, day };
@@ -199,6 +199,14 @@ class YearMonthDayDatePicker extends Component {
             case 'day':
                 ret.day = changedValue;
                 break;
+        }
+        // if month or year is changed might cause date to exceed max or min date
+        // if exceed clear month and day
+        if (isExceedMaxMinDate({date: ret, maxDate, minDate})) {
+            if(type ==='year') {
+                ret.month = '';
+            }
+            ret.day = '';
         }
         // if month or year is changed might cause invalid day to occur e.g. 2021/02/29
         // must not change if day is a customize value developer must handle externally

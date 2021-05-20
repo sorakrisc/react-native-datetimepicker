@@ -1,3 +1,5 @@
+import Moment from 'moment';
+
 const toBuddhistYear = (momentDate, format) => {
   let christianYear = momentDate.format('YYYY');
   let buddhistYear = (parseInt(christianYear) + 543).toString();
@@ -21,10 +23,22 @@ const daysInMonth = ({ month, year }) => { // m is 1 indexed: 1-12
 };
 
 const isValid = ({ day, month, year }) => {
-    const d = parseInt(day);
-    const m = parseInt(month);
-    const y = parseInt(year);
-    return month >= 1 && month < 13 && day > 0 && day <= daysInMonth({month: m, year: y});
+    const d = parseInt(day) || 1;
+    const m = parseInt(month) || 1;
+    const y = parseInt(year) || 1;
+    return m >= 1 && m < 13 && d > 0 && d <= daysInMonth({month: m, year: y});
 };
 
-export {toBuddhistYear, daysInMonth, isValid}
+const isExceedMaxMinDate = ({date, maxDate, minDate}) => {
+    if (date) {
+        const { day, month, year } = date;
+        const d = parseInt(day) || 1;
+        const m = parseInt(month) || 1;
+        const y = parseInt(year) || 1;
+        const inputDate = Moment(`${y}/${m}/${d}`, 'YYYY/M/DD');
+        return (Moment(maxDate) < inputDate)
+            || (Moment(minDate) > inputDate);
+    }
+};
+
+export {toBuddhistYear, daysInMonth, isValid, isExceedMaxMinDate}
